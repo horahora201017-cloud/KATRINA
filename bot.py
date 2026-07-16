@@ -1,8 +1,13 @@
-# KATRINA v1.3
+# KATRINA v1.4
 
 import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler, ContextTypes
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    CallbackQueryHandler,
+    ContextTypes,
+)
 
 TOKEN = os.getenv("TOKEN")
 
@@ -18,7 +23,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     keyboard = [
         [InlineKeyboardButton("🇮🇶 العربية", callback_data="lang_ar")],
-        [InlineKeyboardButton("🇺🇸 English", callback_data="lang_en")]
+        [InlineKeyboardButton("🇺🇸 English", callback_data="lang_en")],
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -27,6 +32,21 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         text,
         reply_markup=reply_markup
     )
+
+
+async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+
+    if query.data == "lang_ar":
+        await query.edit_message_text(
+            "✅ تم اختيار اللغة العربية 🇮🇶"
+        )
+
+    elif query.data == "lang_en":
+        await query.edit_message_text(
+            "✅ English language selected 🇺🇸"
+        )
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -58,5 +78,6 @@ app = Application.builder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("help", help_command))
 app.add_handler(CommandHandler("rules", rules))
+app.add_handler(CallbackQueryHandler(button))
 
 app.run_polling()
