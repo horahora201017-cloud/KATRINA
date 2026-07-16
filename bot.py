@@ -1,4 +1,4 @@
-# KATRINA v1.2
+# KATRINA v1.3
 
 import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -13,9 +13,20 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "بوت إدارة وحماية متطور.\n\n"
         "📖 استخدم /help لعرض قائمة الأوامر.\n"
         "📜 استخدم /rules لعرض قوانين المجموعة.\n\n"
-        "✨ نتمنى لك تجربة ممتعة."
+        "🌍 اختر لغتك من الأزرار بالأسفل."
     )
-    await update.message.reply_text(text)
+
+    keyboard = [
+        [InlineKeyboardButton("🇮🇶 العربية", callback_data="lang_ar")],
+        [InlineKeyboardButton("🇺🇸 English", callback_data="lang_en")]
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    await update.message.reply_text(
+        text,
+        reply_markup=reply_markup
+    )
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
