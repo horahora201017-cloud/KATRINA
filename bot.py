@@ -47,6 +47,11 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text(
             "✅ English language selected 🇺🇸"
         )
+async def user_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        f"🆔 آيديك هو: `{update.effective_user.id}`",
+        parse_mode="Markdown"
+    )
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -77,6 +82,7 @@ app = Application.builder().token(TOKEN).build()
 
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("help", help_command))
+app.add_handler(CommandHandler("id", user_id))
 app.add_handler(CommandHandler("rules", rules))
 app.add_handler(CallbackQueryHandler(button))
 
