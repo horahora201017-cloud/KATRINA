@@ -112,7 +112,23 @@ async def welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
             reply_markup=reply_markup,        
         )
    
+async def auto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not update.message or not update.message.text:
+        return
 
+    text = update.message.text.lower()
+
+    replies = {
+        "كاترينا": "نعم؟ 🌸",
+        "بوت": "معكم KATRINA 🤖",
+        "هلو": "هلا وغلا 💜",
+        "السلام عليكم": "وعليكم السلام ورحمة الله وبركاته 🌸",
+        "صباح الخير": "صباح النور والسرور ☀️",
+        "مساء الخير": "مساء الورد 🌹",
+    }
+
+    if text in replies:    
+    await update.message.reply_text(replies[text])
 app = Application.builder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("help", help_command))
@@ -120,7 +136,8 @@ app.add_handler(CommandHandler("id", user_id))
 app.add_handler(CommandHandler("rules", rules))
 app.add_handler(CallbackQueryHandler(button))
 app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome))
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, auto_reply))
+
 app.run_polling(
     allowed_updates=Update.ALL_TYPES
-            )
-        
+)
