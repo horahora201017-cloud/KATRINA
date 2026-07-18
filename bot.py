@@ -111,7 +111,6 @@ async def welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
             parse_mode="HTML",
             reply_markup=reply_markup,        
         )
-   
 async def auto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
         return
@@ -127,8 +126,9 @@ async def auto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "مساء الخير": "مساء الورد 🌹",
     }
 
-    if text in replies:    
-    await update.message.reply_text(replies[text])
+    if text in replies:
+        await update.message.reply_text(replies[text])
+
 app = Application.builder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("help", help_command))
