@@ -120,5 +120,7 @@ app.add_handler(CommandHandler("id", user_id))
 app.add_handler(CommandHandler("rules", rules))
 app.add_handler(CallbackQueryHandler(button))
 app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome))
-app.run_polling()
+app.run_polling(
+    allowed_updates=Update.ALL_TYPES
+            )
         
