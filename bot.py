@@ -97,7 +97,6 @@ async def welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     for member in update.message.new_chat_members:
         await update.message.reply_text(
-        
             f"""🌸 <b>KATRINA</b>
 
 ✨ أهلاً وسهلاً بك
@@ -110,9 +109,9 @@ async def welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 🤍 شكراً لانضمامك إلينا.""",
             parse_mode="HTML",
-            reply_markup=reply_markup,        )
-    )
-
+            reply_markup=reply_markup,        
+        )
+   
 
 app = Application.builder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
