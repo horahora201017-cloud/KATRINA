@@ -27,14 +27,31 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     await update.message.reply_text(text, reply_markup=InlineKeyboardMarkup(keyboard))
 
-
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
+
     if query.data == "lang_ar":
         await query.edit_message_text("✅ تم اختيار اللغة العربية 🇮🇶")
+
     elif query.data == "lang_en":
         await query.edit_message_text("✅ English language selected 🇺🇸")
+
+    elif query.data == "admin":
+        await query.edit_message_text(
+            "👮 إدارة KATRINA\n\n"
+            "إذا واجهت أي مشكلة تواصل مع إدارة المجموعة."
+        )
+
+    elif query.data == "rules":
+        await query.edit_message_text(
+            "📜 قوانين المجموعة:\n\n"
+            "1- احترام الجميع.\n"
+            "2- يمنع السب.\n"
+            "3- يمنع الروابط.\n"
+            "4- يمنع السبام.\n"
+            "5- يمنع طلب الخاص."
+        )
 
 
 async def user_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -62,16 +79,39 @@ async def rules(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "6. الالتزام بتعليمات الإدارة."
     )
 
-
 async def welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [
+        [
+            InlineKeyboardButton("👮 الإدارة", callback_data="admin"),
+            InlineKeyboardButton("📜 القوانين", callback_data="rules"),
+        ],
+        [
+            InlineKeyboardButton(
+                "📢 قناتنا",
+                url="https://t.me/Silas0001"
+            )
+        ],
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
     for member in update.message.new_chat_members:
         await update.message.reply_text(
-            f"🌸 أهلاً وسهلاً {member.mention_html()}\n\n"
-            "💜 نورت كروب KATRINA.\n"
-            "📜 اقرأ القوانين بالأمر /rules\n"
-            "✨ نتمنى لك وقتًا ممتعًا.",
+        
+            f"""🌸 <b>KATRINA</b>
+
+✨ أهلاً وسهلاً بك
+
+👤 {member.mention_html()}
+
+💜 وجودك أسعدنا بانضمامك إلى عائلتنا الراقية.
+
+احترم الآخرين، وتحلَّ بالأخلاق، واجعل من وجودك إضافة جميلة.
+
+🤍 شكراً لانضمامك إلينا.""",
             parse_mode="HTML",
-        )
+            reply_markup=reply_markup,        )
+    )
 
 
 app = Application.builder().token(TOKEN).build()
@@ -82,3 +122,4 @@ app.add_handler(CommandHandler("rules", rules))
 app.add_handler(CallbackQueryHandler(button))
 app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome))
 app.run_polling()
+        
