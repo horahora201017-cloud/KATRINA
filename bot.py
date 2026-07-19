@@ -80,6 +80,9 @@ async def rules(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 async def welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not update.message:
+        return
+
     keyboard = [
         [
             InlineKeyboardButton("👮 الإدارة", callback_data="admin"),
@@ -96,8 +99,9 @@ async def welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     for member in update.message.new_chat_members:
-        await update.message.reply_text(
-            f"""🌸 <b>KATRINA</b>
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=f"""🌸 <b>KATRINA</b>
 
 ✨ أهلاً وسهلاً بك
 
@@ -105,12 +109,13 @@ async def welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 💜 وجودك أسعدنا بانضمامك إلى عائلتنا الراقية.
 
-احترم الآخرين، وتحلَّ بالأخلاق، واجعل من وجودك إضافة جميلة.
+احترم الجميع، والتزم بالقوانين، ونتمنى لك وقتاً ممتعاً معنا.
 
-🤍 شكراً لانضمامك إلينا.""",
+🤍 شكراً لانضمامك.""",
             parse_mode="HTML",
-            reply_markup=reply_markup,        
+            reply_markup=reply_markup,
         )
+
 
 async def auto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
