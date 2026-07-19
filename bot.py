@@ -157,16 +157,38 @@ async def delete_links(update: Update, context: ContextTypes.DEFAULT_TYPE):
             text=f"🚫 {update.effective_user.mention_html()} يمنع إرسال الروابط.",
             parse_mode="HTML",
         )
+        return
 
 app = Application.builder().token(TOKEN).build()
+
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("help", help_command))
 app.add_handler(CommandHandler("id", user_id))
 app.add_handler(CommandHandler("rules", rules))
+
 app.add_handler(CallbackQueryHandler(button))
-app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome))
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, delete_links))
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, auto_reply))
+
+app.add_handler(
+    MessageHandler(
+        filters.StatusUpdate.NEW_CHAT_MEMBERS,
+        welcome,
+    )
+)
+
+app.add_handler(
+    MessageHandler(
+        filters.TEXT & filters.Regex(r"(http://|https://|t\.me/|telegram\.me/)"),
+        delete_links,
+    )
+)
+
+app.add_handler(
+    MessageHandler(
+        filters.TEXT & ~filters.COMMAND,
+        auto_reply,
+    )
+)
+
 app.run_polling(
     allowed_updates=Update.ALL_TYPES
 )
