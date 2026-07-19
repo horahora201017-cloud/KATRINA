@@ -116,8 +116,7 @@ async def auto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
         return
 
-    text = update.message.text or ""
-    text = text.lower()
+    text = update.message.text.strip().lower()
     
 
     replies = {
