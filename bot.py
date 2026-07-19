@@ -111,11 +111,14 @@ async def welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
             parse_mode="HTML",
             reply_markup=reply_markup,        
         )
+
 async def auto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
         return
 
-    text = update.message.text.lower()
+    text = update.message.text or ""
+    text = text.lower()
+    
 
     replies = {
         "كاترينا": "نعم؟ 🌸",
@@ -128,6 +131,7 @@ async def auto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if text in replies:
         await update.message.reply_text(replies[text])
+
 async def delete_links(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
         return
