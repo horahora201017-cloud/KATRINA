@@ -128,6 +128,32 @@ async def auto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if text in replies:
         await update.message.reply_text(replies[text])
+async def delete_links(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not update.message or not update.message.text:
+        return
+
+    member = await context.bot.get_chat_member(
+        update.effective_chat.id,
+        update.effective_user.id,
+    )
+
+    if member.status in ["administrator", "creator"]:
+        return
+
+    text = update.message.text.lower()
+
+    if (
+        "http://" in text
+        or "https://" in text
+        or "t.me/" in text
+        or "telegram.me/" in text
+    ):
+        await update.message.delete()
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=f"🚫 {update.effective_user.mention_html()} يمنع إرسال الروابط.",
+            parse_mode="HTML",
+        )
 
 app = Application.builder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
@@ -136,8 +162,8 @@ app.add_handler(CommandHandler("id", user_id))
 app.add_handler(CommandHandler("rules", rules))
 app.add_handler(CallbackQueryHandler(button))
 app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome))
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, delete_links))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, auto_reply))
-
 app.run_polling(
     allowed_updates=Update.ALL_TYPES
 )
