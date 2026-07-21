@@ -116,13 +116,11 @@ async def welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
             reply_markup=reply_markup,
         )
 
-
 async def auto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
         return
 
     text = update.message.text.strip().lower()
-    
 
     replies = {
         "كاترينا": "نعم؟ 🌸",
@@ -133,8 +131,30 @@ async def auto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "مساء الخير": "مساء الورد 🌹",
     }
 
+    if text == "معلومات" and update.message.reply_to_message:
+        await user_info(update, context)
+        return
+
     if text in replies:
         await update.message.reply_text(replies[text])
+
+async def user_info(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not update.message or not update.message.reply_to_message:
+        return
+
+    user = update.message.reply_to_message.from_user
+
+    username = f"@{user.username}" if user.username else "لا يوجد"
+
+    text = (
+        f"👤 معلومات العضو\n\n"
+        f"🆔 الآيدي: {user.id}\n"
+        f"📛 الاسم: {user.full_name}\n"
+        f"🔗 اليوزر: {username}\n"
+        f"🤖 بوت: {'نعم' if user.is_bot else 'لا'}"
+    )
+
+    await update.message.reply_text(text)
 
 async def delete_links(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
